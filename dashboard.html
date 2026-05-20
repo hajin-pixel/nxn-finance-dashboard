@@ -1,0 +1,1064 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NXN Finance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d1117; --surface: #161b22; --surface2: #1c2128;
+      --border: #30363d; --text: #e6edf3; --muted: #7d8590;
+      --accent: #7C4DFF; --green: #00E676; --red: #FF3040;
+      --yellow: #FFD600; --blue: #2979FF; --purple: #F50057;
+    }
+    [data-theme="light"] {
+      --bg: #ffffff; --surface: #f6f8fa; --surface2: #eaeef2;
+      --border: #d0d7de; --text: #1f2328; --muted: #656d76;
+    }
+    body, .card, .kpi-card, .header, .filter-select, .btn { transition: background 0.2s, color 0.15s, border-color 0.2s; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; font-size: 14px; line-height: 1.5; }
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 100; gap: 12px; flex-wrap: wrap; }
+    .header-title h1 { font-size: 16px; font-weight: 600; }
+    .header-title .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn { padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text); cursor: pointer; font-size: 12px; transition: background 0.15s; white-space: nowrap; }
+    .btn:hover { background: var(--border); }
+    .main { max-width: 1440px; margin: 0 auto; padding: 20px 24px; }
+    .filters { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-label { font-size: 12px; color: var(--muted); }
+    .filter-select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .full { margin-bottom: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+    .card-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; }
+    .card canvas { max-height: 220px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px; }
+    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+    .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .kpi-value { font-size: 22px; font-weight: 700; line-height: 1.2; }
+    .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .c-green { color: var(--green) !important; } .c-yellow { color: var(--yellow) !important; }
+    .c-red { color: var(--red) !important; } .c-blue { color: var(--blue) !important; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    tbody tr:hover { background: rgba(255,255,255,0.025); }
+    tbody td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    tbody tr:last-child td { border-bottom: none; }
+    .ta-r { text-align: right; font-variant-numeric: tabular-nums; }
+    .badge { display: inline-block; padding: 1px 8px; border-radius: 12px; font-size: 11px; background: rgba(124,77,255,0.15); color: var(--accent); }
+    thead th[onclick] { cursor:pointer; user-select:none; transition:color 0.15s; }
+    thead th[onclick]:hover { color: var(--text); }
+    .sort-ind { font-size:10px; color: var(--accent); margin-left:3px; }
+    .spark { display: flex; align-items: flex-end; gap: 2px; height: 20px; }
+    .spark-bar { width: 5px; border-radius: 1px; background: var(--accent); opacity: 0.7; min-height: 2px; }
+    .delta-up { color: var(--red); }
+    .delta-down { color: var(--blue); }
+    .timeline { display: flex; flex-direction: column; gap: 14px; }
+    .tl-item { display: flex; gap: 12px; }
+    .tl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .tl-dot-green { background: var(--green); } .tl-dot-yellow { background: var(--yellow); }
+    .tl-dot-red { background: var(--red); } .tl-dot-muted { background: var(--muted); }
+    .tl-body h4 { font-size: 13px; font-weight: 600; }
+    .tl-body p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .grant-item { margin-bottom: 18px; }
+    .grant-item:last-child { margin-bottom: 0; }
+    .grant-header { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; }
+    .grant-pct { font-size: 12px; color: var(--muted); }
+    .grant-track { background: var(--bg); border-radius: 4px; height: 8px; overflow: hidden; display: flex; }
+    .grant-used { background: var(--accent); } .grant-rcv { background: rgba(88,166,255,0.35); }
+    .grant-foot { display: flex; gap: 14px; margin-top: 4px; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 3px; vertical-align: middle; }
+    .scenario-wrap { display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: start; }
+    .scenario-ctrl { display: flex; flex-direction: column; gap: 10px; }
+    .scenario-ctrl label { font-size: 12px; color: var(--muted); }
+    .scenario-ctrl input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+    .scenario-ctrl input[type="number"] { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 7px 10px; border-radius: 6px; font-size: 14px; width: 100%; }
+    .scenario-ctrl input[type="number"]:focus { outline: none; border-color: var(--accent); }
+    .scenario-rows { display: flex; flex-direction: column; }
+    .sc-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .sc-row:last-child { border-bottom: none; }
+    .sc-label { color: var(--muted); }
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; color: var(--muted); text-align: center; }
+    .empty-state h2 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+    .empty-state p { font-size: 13px; line-height: 1.6; }
+    /* Tab */
+    .tab-bar { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .tab-btn { padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 500; transition: color 0.15s, border-color 0.15s; margin-bottom: -1px; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+    /* Insights */
+    .trend-bar { font-size: 12px; padding: 8px 12px; background: var(--bg); border-radius: 6px; margin-bottom: 14px; line-height: 1.7; }
+    .insight-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .insight-item:last-child { border-bottom: none; }
+    .insight-icon { font-size: 15px; flex-shrink: 0; line-height: 1.5; }
+    .insight-body { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+    .insight-text { font-size: 13px; }
+    .insight-reason { font-size: 12px; color: var(--muted); }
+    .insight-action { font-size: 12px; color: var(--accent); font-weight: 600; white-space: nowrap; }
+    .insight-action::before { content: '→ '; }
+    @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } .kpi-grid { grid-template-columns: 1fr 1fr; } .scenario-wrap { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) { .kpi-grid { grid-template-columns: 1fr; } .main { padding: 12px 14px; } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">
+    <h1>💰 NXN Finance Dashboard</h1>
+    <div class="sub" id="last-updated">-</div>
+  </div>
+  <div class="header-actions">
+    <button class="btn" onclick="downloadCSV()">📥 CSV 다운로드</button>
+    <button class="btn" onclick="downloadJSON()">📥 JSON 다운로드</button>
+    <button class="btn" id="theme-btn" onclick="toggleTheme()">라이트 모드</button>
+  </div>
+</div>
+
+<div class="main" id="main-content">
+  <div class="filters">
+    <span class="filter-label">단위</span>
+    <select class="filter-select" id="unit" onchange="initFilters()">
+      <option value="월">월</option>
+      <option value="주">주</option>
+    </select>
+    <span class="filter-label" style="margin-left:8px">기간</span>
+    <select class="filter-select" id="fs" onchange="update()"></select>
+    <span class="filter-label">~</span>
+    <select class="filter-select" id="fe" onchange="update()"></select>
+    <span class="filter-label" id="filter-summary"></span>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-ceo" onclick="switchTab('ceo')">📊 CEO Overview</button>
+    <button class="tab-btn" id="tab-ops" onclick="switchTab('ops')">🔍 Ops Detail</button>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">현재 잔액</div><div class="kpi-value" id="kv-bal">-</div><div class="kpi-sub" id="ks-bal">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">번레이트 (3개월 평균)</div><div class="kpi-value" id="kv-br">-</div><div class="kpi-sub" id="ks-br">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">런웨이</div><div class="kpi-value" id="kv-rw">-</div><div class="kpi-sub" id="ks-rw">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">정부지원금 집행률</div><div class="kpi-value" id="kv-gr">-</div><div class="kpi-sub" id="ks-gr">-</div></div>
+  </div>
+
+  <div class="full card">
+    <div class="card-title">이번 달 인사이트 & 액션</div>
+    <div class="trend-bar" id="trend-summary">-</div>
+    <div id="insights-list"></div>
+  </div>
+
+  <!-- CEO 탭 -->
+  <div id="view-ceo">
+    <div class="grid-2">
+      <div class="card"><div class="card-title">자금 조달 시점 예측</div><div class="timeline" id="funding-tl-ceo"></div></div>
+      <div class="card"><div class="card-title">정부지원금 확보 및 사용 현황</div><div id="grant-list-ceo"></div></div>
+    </div>
+  </div>
+
+  <!-- Ops 탭 -->
+  <div id="view-ops" style="display:none">
+    <div class="grid-2">
+      <div class="card"><div class="card-title">잔액 추이</div><canvas id="c-balance"></canvas></div>
+      <div class="card"><div class="card-title">매출 vs 지출</div><canvas id="c-burnrate"></canvas></div>
+    </div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">비용 카테고리 추이</div><canvas id="c-categ"></canvas></div>
+      <div class="card"><div class="card-title">최근 기간 비용 구성</div><canvas id="c-pie"></canvas></div>
+    </div>
+    <div class="full card">
+      <div class="card-title" style="margin-bottom:12px">주요 비용 항목 — 추이</div>
+      <div class="table-wrap"><table><thead><tr>
+        <th onclick="sortCostBy('name')">항목<span class="sort-ind" id="si-name"></span></th>
+        <th onclick="sortCostBy('cat')">카테고리<span class="sort-ind" id="si-cat"></span></th>
+        <th onclick="sortCostBy('la')" class="ta-r">최근 기간<span class="sort-ind" id="si-la"></span></th>
+        <th class="ta-r">전기 대비</th>
+        <th onclick="sortCostBy('tot')" class="ta-r">기간 합계<span class="sort-ind" id="si-tot">▼</span></th>
+        <th>추이</th>
+      </tr></thead><tbody id="cost-tbody"></tbody></table></div>
+    </div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">자금 조달 시점 예측</div><div class="timeline" id="funding-tl-ops"></div></div>
+      <div class="card"><div class="card-title">정부지원금 확보 및 사용 현황</div><div id="grant-list-ops"></div></div>
+    </div>
+    <div class="full card">
+      <div class="card-title" style="margin-bottom:16px">One-off 비용 시나리오 분석 — 런웨이 영향 확인</div>
+      <div class="scenario-wrap">
+        <div class="scenario-ctrl">
+          <label>추가 지출 금액 (원)</label>
+          <input type="number" id="sc-num" placeholder="금액 직접 입력" step="1000000" oninput="scFromNum()">
+          <input type="range" id="sc-range" min="0" max="100000000" step="500000" value="0" oninput="scFromRange()">
+          <div style="font-size:11px;color:var(--muted)" id="sc-range-label">₩0</div>
+        </div>
+        <div class="scenario-rows">
+          <div class="sc-row"><span class="sc-label">추가 비용</span><span id="sr-amt">₩0</span></div>
+          <div class="sc-row"><span class="sc-label">현재 런웨이</span><span id="sr-before">-</span></div>
+          <div class="sc-row"><span class="sc-label">지출 후 런웨이</span><span id="sr-after">-</span></div>
+          <div class="sc-row"><span class="sc-label">런웨이 감소</span><span id="sr-delta">-</span></div>
+          <div class="sc-row"><span class="sc-label">자금 조달 시점 앞당겨짐</span><span id="sr-shift">-</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const D = {
+  "lastUpdated": "2026-05-19",
+  "config": {
+    "companyName": "NXN Labs",
+    "loanGuaranteeName": "신용보증대출",
+    "loanGuaranteeTotal": 3000000000,
+    "loanGuaranteeDrawn": 3000000000,
+    "loanMinusBankName": "마이너스 통장",
+    "loanMinusBankLimit": 1800000000,
+    "loanMinusBankDrawn": 0
+  },
+  "months": [
+    {
+      "period": "2026-01",
+      "endBalance": 5500000000,
+      "totalRevenue": 260000000,
+      "serviceRevenue": 75000000,
+      "totalExpense": 950000000,
+      "burnRate": 950000000,
+      "categories": {
+        "인건비": 400000000,
+        "소프트웨어·구독": 125000000,
+        "여비·교통": 110000000,
+        "식대·복리후생": 55000000,
+        "외주·수수료": 42000000,
+        "임차료": 12000000,
+        "기타": 200000000
+      },
+      "topCosts": [
+        {
+          "name": "직원급여",
+          "amount": 340000000,
+          "category": "인건비"
+        },
+        {
+          "name": "행사 참가비 A",
+          "amount": 190000000,
+          "category": "기타"
+        },
+        {
+          "name": "클라우드 인프라 A",
+          "amount": 78000000,
+          "category": "소프트웨어·구독"
+        },
+        {
+          "name": "GPU 비용",
+          "amount": 54000000,
+          "category": "기타"
+        },
+        {
+          "name": "AI 서비스 구독 A",
+          "amount": 30000000,
+          "category": "소프트웨어·구독"
+        },
+        {
+          "name": "숙박비 (행사 A)",
+          "amount": 27000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "항공권 (행사 A)",
+          "amount": 23000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "원천세 (1월분)",
+          "amount": 19000000,
+          "category": "기타"
+        },
+        {
+          "name": "항공권 (행사 B)",
+          "amount": 19000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "비즈니스 자문료 A",
+          "amount": 17000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "행사 부스 비용",
+          "amount": 13000000,
+          "category": "기타"
+        },
+        {
+          "name": "비즈니스 자문료 B",
+          "amount": 13000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "행사 물품",
+          "amount": 11000000,
+          "category": "기타"
+        },
+        {
+          "name": "복리후생비 A",
+          "amount": 9000000,
+          "category": "식대·복리후생"
+        },
+        {
+          "name": "교육비 지원",
+          "amount": 7000000,
+          "category": "식대·복리후생"
+        }
+      ]
+    },
+    {
+      "period": "2026-02",
+      "endBalance": 6800000000,
+      "totalRevenue": 470000000,
+      "serviceRevenue": 55000000,
+      "totalExpense": 710000000,
+      "burnRate": 710000000,
+      "categories": {
+        "인건비": 350000000,
+        "소프트웨어·구독": 24000000,
+        "여비·교통": 42000000,
+        "식대·복리후생": 48000000,
+        "외주·수수료": 60000000,
+        "임차료": 12000000,
+        "기타": 175000000
+      },
+      "topCosts": [
+        {
+          "name": "직원급여",
+          "amount": 280000000,
+          "category": "인건비"
+        },
+        {
+          "name": "정부사업 집행금 A",
+          "amount": 66000000,
+          "category": "기타"
+        },
+        {
+          "name": "4대보험료",
+          "amount": 57000000,
+          "category": "인건비"
+        },
+        {
+          "name": "숙박비 (행사 B)",
+          "amount": 25000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "원천세 (2월분)",
+          "amount": 23000000,
+          "category": "기타"
+        },
+        {
+          "name": "비즈니스 자문료 A",
+          "amount": 17000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "마케팅 비용 A",
+          "amount": 15000000,
+          "category": "기타"
+        },
+        {
+          "name": "비즈니스 자문료 B",
+          "amount": 13000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "채용 수수료",
+          "amount": 13000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "사무용품",
+          "amount": 12000000,
+          "category": "기타"
+        },
+        {
+          "name": "복리후생비 B",
+          "amount": 11000000,
+          "category": "식대·복리후생"
+        },
+        {
+          "name": "비품 구매",
+          "amount": 8000000,
+          "category": "기타"
+        },
+        {
+          "name": "식대 A",
+          "amount": 7000000,
+          "category": "식대·복리후생"
+        },
+        {
+          "name": "해외 법인 비용",
+          "amount": 5000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "복리후생비 C",
+          "amount": 5000000,
+          "category": "식대·복리후생"
+        }
+      ]
+    },
+    {
+      "period": "2026-03",
+      "endBalance": 7500000000,
+      "totalRevenue": 380000000,
+      "serviceRevenue": 85000000,
+      "totalExpense": 770000000,
+      "burnRate": 770000000,
+      "categories": {
+        "인건비": 420000000,
+        "소프트웨어·구독": 60000000,
+        "여비·교통": 100000000,
+        "식대·복리후생": 42000000,
+        "외주·수수료": 42000000,
+        "임차료": 12000000,
+        "기타": 90000000
+      },
+      "topCosts": [
+        {
+          "name": "직원급여",
+          "amount": 300000000,
+          "category": "인건비"
+        },
+        {
+          "name": "4대보험료 (3월분)",
+          "amount": 66000000,
+          "category": "인건비"
+        },
+        {
+          "name": "4대보험료 (2월분 추가)",
+          "amount": 54000000,
+          "category": "인건비"
+        },
+        {
+          "name": "GPU 비용",
+          "amount": 35000000,
+          "category": "기타"
+        },
+        {
+          "name": "원천세 (3월분)",
+          "amount": 27000000,
+          "category": "기타"
+        },
+        {
+          "name": "항공권 (행사 C)",
+          "amount": 25000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "AI 서비스 구독 A",
+          "amount": 24000000,
+          "category": "소프트웨어·구독"
+        },
+        {
+          "name": "숙박비 (행사 C-1)",
+          "amount": 21000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "숙박비 (행사 C-2)",
+          "amount": 19000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "비즈니스 자문료 A",
+          "amount": 17000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "비즈니스 자문료 B",
+          "amount": 13000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "항공권 (행사 C 추가)",
+          "amount": 11000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "식대 A",
+          "amount": 5000000,
+          "category": "식대·복리후생"
+        },
+        {
+          "name": "지방소득세",
+          "amount": 5000000,
+          "category": "기타"
+        },
+        {
+          "name": "SaaS 구독 B",
+          "amount": 4000000,
+          "category": "소프트웨어·구독"
+        }
+      ]
+    },
+    {
+      "period": "2026-04",
+      "endBalance": 9800000000,
+      "totalRevenue": 570000000,
+      "serviceRevenue": 230000000,
+      "totalExpense": 830000000,
+      "burnRate": 830000000,
+      "categories": {
+        "인건비": 390000000,
+        "소프트웨어·구독": 54000000,
+        "임차료": 0,
+        "여비·교통": 90000000,
+        "식대·복리후생": 42000000,
+        "외주·수수료": 42000000,
+        "기타": 210000000
+      },
+      "topCosts": [
+        {
+          "name": "직원급여",
+          "amount": 300000000,
+          "category": "인건비"
+        },
+        {
+          "name": "4대보험료",
+          "amount": 90000000,
+          "category": "인건비"
+        },
+        {
+          "name": "행사 참가비+숙소 A",
+          "amount": 72000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "행사 참가비 B",
+          "amount": 48000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "숙박비 (행사 D)",
+          "amount": 25000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "AI 서비스 구독 A",
+          "amount": 24000000,
+          "category": "소프트웨어·구독"
+        },
+        {
+          "name": "원천세 (3월분)",
+          "amount": 23000000,
+          "category": "기타"
+        },
+        {
+          "name": "비즈니스 자문료 A",
+          "amount": 17000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "숙박비 (행사 D-2)",
+          "amount": 18000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "항공권 (행사 D)",
+          "amount": 15000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "비품 구매",
+          "amount": 13000000,
+          "category": "기타"
+        },
+        {
+          "name": "비즈니스 자문료 B",
+          "amount": 13000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "항공권 (행사 D-2)",
+          "amount": 11000000,
+          "category": "여비·교통"
+        },
+        {
+          "name": "회계 기장료",
+          "amount": 11000000,
+          "category": "기타"
+        },
+        {
+          "name": "SaaS 구독 B",
+          "amount": 5000000,
+          "category": "소프트웨어·구독"
+        }
+      ]
+    }
+  ],
+  "weeks": [
+    {
+      "period": "2026-W20",
+      "endBalance": 9500000000,
+      "totalRevenue": 15000000,
+      "serviceRevenue": 5000000,
+      "totalExpense": 69000000,
+      "burnRate": 69000000,
+      "categories": {
+        "인건비": 0,
+        "소프트웨어·구독": 7000000,
+        "임차료": 0,
+        "여비·교통": 0,
+        "식대·복리후생": 13000000,
+        "외주·수수료": 25000000,
+        "기타": 25000000
+      },
+      "topCosts": [
+        {
+          "name": "비즈니스 자문료 A",
+          "amount": 17000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "대출 이자",
+          "amount": 10000000,
+          "category": "기타"
+        },
+        {
+          "name": "비즈니스 자문료 B",
+          "amount": 8000000,
+          "category": "외주·수수료"
+        },
+        {
+          "name": "식대",
+          "amount": 8000000,
+          "category": "식대·복리후생"
+        },
+        {
+          "name": "소프트웨어 구독",
+          "amount": 7000000,
+          "category": "소프트웨어·구독"
+        },
+        {
+          "name": "원천세·지방세",
+          "amount": 6000000,
+          "category": "기타"
+        },
+        {
+          "name": "복리후생비",
+          "amount": 4000000,
+          "category": "식대·복리후생"
+        }
+      ]
+    }
+  ],
+  "govGrants": [
+    {
+      "name": "정부지원사업 A (3년차)",
+      "totalAmount": 3600000000,
+      "received": 240000000,
+      "used": 240000000,
+      "months": [
+        {
+          "month": "2026-04",
+          "received": 240000000
+        }
+      ]
+    },
+    {
+      "name": "정부지원사업 B (해외마케팅)",
+      "totalAmount": 450000000,
+      "received": 54000000,
+      "used": 54000000,
+      "months": [
+        {
+          "month": "2026-04",
+          "received": 54000000
+        }
+      ]
+    },
+    {
+      "name": "정부지원사업 C (창업사업화)",
+      "totalAmount": 600000000,
+      "received": 0,
+      "used": 0,
+      "months": []
+    },
+    {
+      "name": "정부지원사업 D",
+      "totalAmount": 180000000,
+      "received": 0,
+      "used": 0,
+      "months": []
+    }
+  ]
+};
+const FMTF = n => n.toLocaleString()+'원';
+const FMT = n => { const a=Math.abs(n); if(a>=1e8) return (Math.round(n/1e7)/10).toFixed(1)+'억'; if(a>=1e4) return Math.round(n/1e4).toLocaleString()+'만원'; return n.toLocaleString()+'원'; };
+const MP = p => p.includes('-W') ? p.split('-W')[1]+'주' : p.replace('-','.');
+function addM(period,n){ const [y,m]=period.split('-').map(Number); const d=new Date(y,m-1+n,1); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+function diffM(a,b){ const [ay,am]=a.split('-').map(Number),[by,bm]=b.split('-').map(Number); return (by-ay)*12+(bm-am); }
+
+let charts={}, FM=[], _currentTab='ceo';
+
+function switchTab(tab){
+  _currentTab=tab;
+  document.getElementById('tab-ceo').classList.toggle('active',tab==='ceo');
+  document.getElementById('tab-ops').classList.toggle('active',tab==='ops');
+  document.getElementById('view-ceo').style.display=tab==='ceo'?'':'none';
+  document.getElementById('view-ops').style.display=tab==='ops'?'':'none';
+  if(tab==='ops'&&FM.length){ renderBalance();renderBurnrate();renderCateg();renderPie();renderCostTable();renderFundingBase('funding-tl-ops');renderGrantsBase('grant-list-ops'); }
+}
+
+function initTheme(){
+  const saved=localStorage.getItem('nxn-theme');
+  const preferLight=window.matchMedia('(prefers-color-scheme: light)').matches;
+  setTheme(saved||(preferLight?'light':'dark'));
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change',e=>{ if(!localStorage.getItem('nxn-theme')) setTheme(e.matches?'light':'dark'); });
+}
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  const btn=document.getElementById('theme-btn');
+  if(btn) btn.textContent=t==='light'?'다크 모드':'라이트 모드';
+}
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  const next=cur==='light'?'dark':'light';
+  localStorage.setItem('nxn-theme',next);
+  setTheme(next);
+  if(FM.length&&_currentTab==='ops'){ renderBalance();renderBurnrate();renderCateg();renderPie(); }
+}
+
+function initFilters(){
+  const unit=document.getElementById('unit').value;
+  const DS=unit==='주'?(D.weeks||[]):D.months;
+  const fs=document.getElementById('fs'),fe=document.getElementById('fe');
+  fs.innerHTML=''; fe.innerHTML='';
+  if(!DS.length){
+    fs.innerHTML='<option value="">—</option>'; fe.innerHTML='<option value="">—</option>';
+    document.getElementById('filter-summary').textContent=unit==='주'?'주간 데이터 없음 (/finance.w 실행 필요)':'';
+    FM=[]; return;
+  }
+  const periods=[...new Set(DS.map(m=>m.period))].sort();
+  periods.forEach(p=>{ const lbl=MP(p); fs.innerHTML+=`<option value="${p}">${lbl}</option>`; fe.innerHTML+=`<option value="${p}">${lbl}</option>`; });
+  fs.value=periods[Math.max(0,periods.length-6)]; fe.value=periods[periods.length-1];
+  update();
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  initTheme();
+  document.getElementById('last-updated').textContent='최근 업데이트: '+D.lastUpdated;
+  if(!D.months.length){
+    document.getElementById('main-content').innerHTML=`<div class="empty-state"><h2>📊 데이터 준비 중</h2><p>/finance.m 을 실행하면<br>이 대시보드에 데이터가 자동으로 채워집니다.</p></div>`;
+    return;
+  }
+  initFilters();
+});
+
+// 기타 내 대형 항목 별도 카테고리 분리
+function getEnrichedFM(months){
+  if(!months.length) return months;
+  const stats={};
+  months.forEach(m=>{ (m.topCosts||[]).forEach(c=>{ if(c.category==='기타'){ if(!stats[c.name]) stats[c.name]={total:0,max:0}; stats[c.name].total+=c.amount; stats[c.name].max=Math.max(stats[c.name].max,c.amount); } }); });
+  const promoted=new Set(Object.entries(stats).filter(([,s])=>s.max>=3000000||s.total>=5000000).map(([n])=>n));
+  if(!promoted.size) return months;
+  return months.map(m=>{
+    const nc={...m.categories}; let ded=0;
+    const nt=(m.topCosts||[]).map(c=>{ if(c.category==='기타'&&promoted.has(c.name)){ nc[c.name]=(nc[c.name]||0)+c.amount; ded+=c.amount; return {...c,category:c.name}; } return c; });
+    if(ded>0){ const r=Math.max(0,(nc['기타']||0)-ded); if(r>0) nc['기타 (소액)']=r; delete nc['기타']; }
+    return {...m,categories:nc,topCosts:nt};
+  });
+}
+
+// 전체 지출 대비 1% 미만 카테고리를 '기타 (소액)'으로 자동 병합 (임차료 등 미소 항목 제거)
+function mergeSmallCats(cats){
+  const total=Object.values(cats).reduce((a,b)=>a+b,0);
+  if(!total) return cats;
+  const result={}, threshold=0.01;
+  let small=0;
+  Object.entries(cats).forEach(([k,v])=>{
+    if(v<=0) return;
+    if(k==='기타 (소액)'||k==='기타'){ result[k]=(result[k]||0)+v; return; }
+    if(v/total<threshold){ small+=v; } else { result[k]=v; }
+  });
+  if(small>0) result['기타 (소액)']=(result['기타 (소액)']||0)+small;
+  return result;
+}
+
+function update(){
+  const unit=document.getElementById('unit')?.value||'월';
+  const DS=unit==='주'?(D.weeks||[]):D.months;
+  const s=document.getElementById('fs').value,e=document.getElementById('fe').value;
+  if(!s||!e) return;
+  FM=DS.filter(m=>m.period>=s&&m.period<=e).sort((a,b)=>a.period<b.period?-1:1);
+  if(!FM.length) return;
+  FM=getEnrichedFM(FM);
+  document.getElementById('filter-summary').textContent=unit==='주'?`${FM.length}주`:`${FM.length}개월`;
+  renderKPIs(); renderInsights();
+  renderFundingBase('funding-tl-ceo'); renderGrantsBase('grant-list-ceo');
+  if(_currentTab==='ops'){ renderBalance();renderBurnrate();renderCateg();renderPie();renderCostTable();renderFundingBase('funding-tl-ops');renderGrantsBase('grant-list-ops'); }
+  renderScenario();
+}
+
+function avgBR(){ const r=FM.slice(-3); return r.reduce((s,m)=>s+m.burnRate,0)/r.length; }
+function avgBRPrev(){ if(FM.length<4) return null; const r=FM.slice(-4,-1); return r.reduce((s,m)=>s+m.burnRate,0)/r.length; }
+
+function renderKPIs(){
+  const L=FM[FM.length-1],cfg=D.config,br=avgBR();
+  const gLoan=cfg.loanGuaranteeDrawn||0,mLoan=cfg.loanMinusBankDrawn||0;
+  document.getElementById('kv-bal').textContent=FMT(L.endBalance);
+  document.getElementById('ks-bal').textContent='신보 제외: '+FMT(Math.max(0,L.endBalance-gLoan))+' | 전체 제외: '+FMT(Math.max(0,L.endBalance-gLoan-mLoan));
+  document.getElementById('kv-br').textContent=FMT(br)+'/월';
+  document.getElementById('ks-br').textContent='이번 달: '+FMT(L.burnRate);
+  const rw=br>0?L.endBalance/br:Infinity;
+  const rvEl=document.getElementById('kv-rw');
+  rvEl.textContent=isFinite(rw)?rw.toFixed(1)+'개월':'∞';
+  rvEl.className='kpi-value '+(rw<6?'c-red':rw<12?'c-yellow':'c-green');
+  document.getElementById('ks-rw').textContent=isFinite(rw)&&!L.period.includes('W')?'소진 예상: '+MP(addM(L.period,Math.floor(rw))):'흑자 유지';
+  const tot=D.govGrants.reduce((s,g)=>s+g.totalAmount,0),used=D.govGrants.reduce((s,g)=>s+g.used,0);
+  const pct=tot>0?Math.round(used/tot*100):0;
+  document.getElementById('kv-gr').textContent=tot>0?pct+'%':'—';
+  document.getElementById('kv-gr').className='kpi-value '+(pct>80?'c-red':pct>50?'c-yellow':'c-blue');
+  document.getElementById('ks-gr').textContent=tot>0?FMT(used)+' / '+FMT(tot):'데이터 없음';
+}
+
+// 특정 카테고리에서 전월 대비 증가한 항목 상위 N개 반환
+function getItemChanges(cat, curMonth, prevMonth, topN=2){
+  const cur={}, prev={};
+  (curMonth.topCosts||[]).filter(c=>c.category===cat).forEach(c=>cur[c.name]=(cur[c.name]||0)+c.amount);
+  if(prevMonth) (prevMonth.topCosts||[]).filter(c=>c.category===cat).forEach(c=>prev[c.name]=(prev[c.name]||0)+c.amount);
+  const changes=[];
+  Object.keys(cur).forEach(name=>{ const d=cur[name]-(prev[name]||0); if(d>300000) changes.push({name,diff:d}); });
+  return changes.sort((a,b)=>b.diff-a.diff).slice(0,topN);
+}
+
+// 두 달 간 카테고리별 변동 상위 N개 반환
+function getCatChanges(curMonth, prevMonth, topN=2){
+  if(!prevMonth) return [];
+  const changes=[];
+  const curCats=curMonth.categories||{}, prevCats=prevMonth.categories||{};
+  Object.entries(curCats).forEach(([k,v])=>{
+    if(k==='기타'||k==='기타 (소액)') return;
+    const p=prevCats[k]||0;
+    if(p>0 && Math.abs(v-p)/p>0.05 && Math.abs(v-p)>500000) changes.push({cat:k,diff:v-p,pct:(v-p)/p*100});
+  });
+  return changes.sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff)).slice(0,topN);
+}
+
+function renderInsights(){
+  if(!FM.length) return;
+  const L=FM[FM.length-1], P=FM.length>1?FM[FM.length-2]:null;
+  const br3=avgBR(), brPrev=avgBRPrev(), rw=br3>0?L.endBalance/br3:Infinity;
+  const insights=[];
+
+  // 런웨이 경고
+  if(isFinite(rw)&&rw<6) insights.push({icon:'🔴',text:`런웨이 ${rw.toFixed(1)}개월 — 긴급 자금 조달 필요`,action:'IR 자료 준비 즉시 착수'});
+  else if(isFinite(rw)&&rw<12) insights.push({icon:'🟡',text:`런웨이 ${rw.toFixed(1)}개월 — 6개월 내 조달 검토 권장`,action:'투자/대출 옵션 사전 검토'});
+
+  // 번레이트 트렌드 + 어떤 카테고리가 주도했는지
+  if(brPrev!==null&&brPrev>0){
+    const chg=(br3-brPrev)/brPrev*100;
+    if(Math.abs(chg)>5){
+      const drivers=getCatChanges(L,P,2);
+      const driverStr=drivers.length>0 ? ' — '+drivers.map(d=>`${d.cat} ${d.pct>0?'+':''}${d.pct.toFixed(0)}%`).join(', ') : '';
+      insights.push({icon:chg>0?'🔴':'🟢',text:`번레이트 3개월 평균 ${Math.abs(chg).toFixed(0)}% ${chg>0?'증가':'감소'} (${FMT(brPrev)} → ${FMT(br3)}/월)`,reason:driverStr.replace(' — ',''),action:chg>15?'비용 급증 항목 즉시 점검':null});
+    }
+  }
+
+  // 카테고리별 급등 + 어떤 항목이 올랐는지
+  if(P){
+    const cats=L.categories||{}, prev=P.categories||{};
+    Object.entries(cats).forEach(([cat,cur])=>{
+      if(cat==='기타'||cat==='기타 (소액)') return;
+      const p=prev[cat]||0;
+      if(p>0&&cur>0){
+        const chg=(cur-p)/p*100;
+        if(chg>20){
+          const items=getItemChanges(cat,L,P,2);
+          const itemStr=items.length>0 ? items.map(i=>{const nm=i.name.length>12?i.name.slice(0,12)+'…':i.name; return `${nm} +${FMT(i.diff)}`;}).join(', ') : '';
+          insights.push({icon:'⚠️',text:`${cat} 전월 대비 +${chg.toFixed(0)}% (${FMT(p)} → ${FMT(cur)})`,reason:itemStr,action:'증가 사유 파악'});
+        }
+      }
+    });
+  }
+
+  // 고정비 비중
+  const cats=L.categories||{}, totalExp=L.totalExpense||0;
+  if(totalExp>0){
+    const fixed=(cats['인건비']||0)+(cats['임차료']||0), pct=fixed/totalExp*100;
+    if(pct>70) insights.push({icon:'🔴',text:`고정비(인건비+임차료) 비중 ${pct.toFixed(0)}%`,reason:'매우 높음 — 변동성 확보 필요',action:'비용 구조 재검토'});
+    else if(pct>60) insights.push({icon:'🟡',text:`고정비(인건비+임차료) 비중 ${pct.toFixed(0)}%`,reason:'주의 수준',action:'변동비 절감 검토'});
+  }
+
+  // 기타 비중 10% 초과
+  if(totalExp>0){
+    const other=(cats['기타']||0)+(cats['기타 (소액)']||0);
+    if(other/totalExp>0.1){
+      const topOther=(L.topCosts||[]).filter(c=>c.category==='기타'||c.category==='기타 (소액)').sort((a,b)=>b.amount-a.amount).slice(0,2);
+      const oStr=topOther.length>0 ? topOther.map(i=>{const nm=i.name.length>10?i.name.slice(0,10)+'…':i.name; return `${nm} ${FMT(i.amount)}`;}).join(', ') : '';
+      insights.push({icon:'📋',text:`기타 비용 비중 ${(other/totalExp*100).toFixed(0)}% — 10% 초과`,reason:oStr,action:'세부 항목 재분류'});
+    }
+  }
+
+  // 트렌드 1줄 요약
+  const trendEl=document.getElementById('trend-summary');
+  if(brPrev!==null&&brPrev>0){
+    const chg=(br3-brPrev)/brPrev*100, dir=chg>0?'▲':'▼', col=chg>0?'var(--red)':'var(--green)';
+    const rwStr=isFinite(rw)?`런웨이 <strong>${rw.toFixed(1)}개월</strong>`:'흑자 기조';
+    trendEl.innerHTML=`번레이트 3개월 평균 <strong style="color:${col}">${dir} ${Math.abs(chg).toFixed(0)}%</strong> (${FMT(brPrev)} → ${FMT(br3)}/월) &nbsp;·&nbsp; ${rwStr} &nbsp;·&nbsp; ${MP(FM[0].period)} ~ ${MP(L.period)}`;
+  } else {
+    trendEl.innerHTML=`번레이트 <strong>${FMT(br3)}/월</strong> &nbsp;·&nbsp; 런웨이 <strong>${isFinite(rw)?rw.toFixed(1)+'개월':'∞'}</strong>`;
+  }
+
+  const listEl=document.getElementById('insights-list');
+  if(!insights.length){ listEl.innerHTML='<div style="color:var(--muted);font-size:13px;padding:4px 0">이상 신호 없음 ✅</div>'; return; }
+  listEl.innerHTML=insights.map(i=>`
+    <div class="insight-item">
+      <span class="insight-icon">${i.icon}</span>
+      <div class="insight-body">
+        <span class="insight-text">${i.text}</span>
+        ${i.reason?`<span class="insight-reason">(${i.reason})</span>`:''}
+        ${i.action?`<span class="insight-action">${i.action}</span>`:''}
+      </div>
+    </div>`).join('');
+}
+
+// ── 카테고리 색상 — 색상환 ~70° 간격, 고채도 틴트 ──
+const CAT_COLORS = {
+  '인건비':         '#FF4D4D',  // 0°   선명 빨강
+  '소프트웨어·구독': '#4DAAFF',  // 210° 선명 파랑
+  '외주·수수료':    '#C24DFF',  // 280° 선명 보라  (파랑·주황과 최대 대비)
+  '식대·복리후생':  '#33D980',  // 148° 선명 초록
+  '여비·교통':      '#FF8C33',  // 32°  선명 주황
+  '기타':           '#8896A5',  // 중립
+  '기타 (소액)':    '#8896A5',
+};
+const FALLBACK_COLORS=['#FFD633','#33D9D9','#FF6699','#99CC33','#FF6633','#6699FF'];
+function catColor(name){
+  if(CAT_COLORS[name]) return CAT_COLORS[name];
+  let h=0; for(const c of name) h=Math.imul(31,h)+c.charCodeAt(0)|0;
+  return FALLBACK_COLORS[Math.abs(h)%FALLBACK_COLORS.length];
+}
+
+function getBaseOpts(){
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  const tc=isLight?'#656d76':'#7d8590', gc=isLight?'#d0d7de':'#21262d';
+  return {responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:tc,font:{size:11},padding:12,usePointStyle:true,pointStyle:'circle',pointStyleWidth:9,boxBorderWidth:0}}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},y:{ticks:{color:tc,font:{size:11},callback:v=>FMT(v)},grid:{color:gc}}}};
+}
+function kill(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
+
+function renderBalance(){ kill('bal'); charts['bal']=new Chart(document.getElementById('c-balance').getContext('2d'),{type:'line',data:{labels:FM.map(m=>MP(m.period)),datasets:[{label:'잔액',data:FM.map(m=>m.endBalance),borderColor:'#7C4DFF',backgroundColor:'rgba(124,77,255,0.12)',fill:true,tension:0.35,pointRadius:4,pointBackgroundColor:'#7C4DFF',spanGaps:true}]},options:{...getBaseOpts()}}); }
+
+function renderBurnrate(){ kill('br'); charts['br']=new Chart(document.getElementById('c-burnrate').getContext('2d'),{type:'bar',data:{labels:FM.map(m=>MP(m.period)),datasets:[{label:'지출',data:FM.map(m=>m.totalExpense),backgroundColor:'rgba(255,48,64,0.85)',borderRadius:3},{label:'서비스매출',data:FM.map(m=>m.serviceRevenue||0),backgroundColor:'rgba(0,230,118,0.9)',borderRadius:3},{label:'기타수익 (지원금·이자)',data:FM.map(m=>(m.totalRevenue||0)-(m.serviceRevenue||0)),backgroundColor:'rgba(41,121,255,0.75)',borderRadius:3}]},options:{...getBaseOpts()}}); }
+
+// 비용 카테고리 추이 — mergeSmallCats 적용으로 임차료 등 미소 항목 자동 제거
+function renderCateg(){
+  kill('cat');
+  const mergedFM=FM.map(m=>({...m,categories:mergeSmallCats(m.categories||{})}));
+  const cats=[...new Set(mergedFM.flatMap(m=>Object.keys(m.categories)))];
+  const bo=getBaseOpts();
+  charts['cat']=new Chart(document.getElementById('c-categ').getContext('2d'),{
+    type:'bar',
+    data:{labels:mergedFM.map(m=>MP(m.period)),datasets:cats.map(c=>({label:c,data:mergedFM.map(m=>m.categories?.[c]||0),backgroundColor:catColor(c),stack:'s',borderRadius:c===cats[cats.length-1]?3:0,borderSkipped:false}))},
+    options:{...bo,scales:{x:{...bo.scales.x,stacked:true},y:{...bo.scales.y,stacked:true}}}
+  });
+}
+
+// 비용 구성 도넛 — mergeSmallCats 적용
+function renderPie(){
+  kill('pie');
+  const L=FM[FM.length-1];
+  const cats=mergeSmallCats(L.categories||{});
+  const isLight=document.documentElement.getAttribute('data-theme')==='light', tc=isLight?'#656d76':'#7d8590';
+  const entries=Object.entries(cats).filter(([,v])=>v>0).sort(([,a],[,b])=>b-a);
+  charts['pie']=new Chart(document.getElementById('c-pie').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:entries.map(([k])=>k),datasets:[{data:entries.map(([,v])=>v),backgroundColor:entries.map(([k])=>catColor(k)),borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:'58%',plugins:{legend:{position:'right',labels:{color:tc,font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}},tooltip:{callbacks:{label:c=>{const tot=entries.reduce((a,[,b])=>a+b,0);return ` ${c.label}: ${FMT(c.raw)} (${Math.round(c.raw/tot*100)}%)`;}}}}}
+  });
+}
+
+let _costSort={key:'tot',dir:-1};
+function sortCostBy(key){ _costSort.dir=_costSort.key===key?-_costSort.dir:-1; _costSort.key=key; renderCostTable(); }
+function renderCostTable(){
+  const map={};
+  FM.forEach(m=>{(m.topCosts||[]).forEach(c=>{const k=c.name+'|'+c.category;if(!map[k])map[k]={name:c.name,cat:c.category,months:{}};map[k].months[m.period]=(map[k].months[m.period]||0)+c.amount;});});
+  const last2=FM.slice(-2),LP=last2[last2.length-1]?.period,PP=last2.length>1?last2[0].period:null;
+  const allRows=Object.values(map).map(r=>({...r,la:r.months[LP]||0,pa:PP?r.months[PP]||0:0,tot:Object.values(r.months).reduce((a,b)=>a+b,0)}));
+  const {key,dir}=_costSort;
+  allRows.sort((a,b)=>{ if(key==='name') return dir*(a.name<b.name?-1:a.name>b.name?1:0); if(key==='cat') return dir*(a.cat<b.cat?-1:a.cat>b.cat?1:0); if(key==='la') return dir*(a.la-b.la); return dir*(a.tot-b.tot); });
+  const rows=allRows.slice(0,15), maxT=Math.max(...allRows.map(r=>r.tot),1);
+  ['name','cat','la','tot'].forEach(k=>{ const el=document.getElementById('si-'+k); if(el) el.textContent=k===key?(dir===-1?'▼':'▲'):''; });
+  document.getElementById('cost-tbody').innerHTML=rows.map(r=>{
+    const d=r.la-r.pa, dc=d>0?'delta-up':d<0?'delta-down':'';
+    const pct=r.pa>0?Math.round(Math.abs(d)/r.pa*100):null;
+    const dt=d!==0?`${d>0?'↑':'↓'} ${FMT(Math.abs(d))}${pct!==null?` (${pct}%)`:''}`:'—';
+    const bw=Math.round(r.tot/maxT*80), sparkVals=FM.map(m=>r.months[m.period]||0), sm=Math.max(...sparkVals,1);
+    const spark=sparkVals.map(v=>`<div class="spark-bar" style="height:${Math.round(v/sm*18)+2}px"></div>`).join('');
+    return `<tr><td>${r.name}</td><td><span class="badge">${r.cat}</span></td><td class="ta-r">${FMTF(r.la)}</td><td class="ta-r ${dc}">${dt}</td><td class="ta-r" style="min-width:160px"><div style="display:flex;align-items:center;gap:8px;justify-content:flex-end"><div style="height:4px;width:${bw}px;background:var(--accent);border-radius:2px;opacity:0.6"></div>${FMTF(r.tot)}</div></td><td><div class="spark">${spark}</div></td></tr>`;
+  }).join('');
+}
+
+function renderFundingBase(elId){
+  const L=FM[FM.length-1],cfg=D.config,br=avgBR(),el=document.getElementById(elId);
+  if(!el) return;
+  const unit=document.getElementById('unit')?.value||'월';
+  if(unit==='주'){el.innerHTML='<p style="color:var(--muted);font-size:13px">월별 보기에서 확인 가능합니다.</p>';return;}
+  if(br<=0){el.innerHTML='<p style="color:var(--green)">현재 번레이트 없음 (흑자 또는 데이터 부족)</p>';return;}
+  const gLoan=cfg.loanGuaranteeDrawn||0,mLoan=cfg.loanMinusBankDrawn||0,totalLoan=gLoan+mLoan;
+  const rw1=L.endBalance/br,fd1=addM(L.period,Math.floor(rw1));
+  const bal2=Math.max(0,L.endBalance-gLoan),rw2=bal2/br,fd2=addM(L.period,Math.floor(rw2));
+  const bal3=Math.max(0,L.endBalance-totalLoan),rw3=bal3/br,fd3=addM(L.period,Math.floor(rw3));
+  const prep=addM(fd1,-6),dot=rw=>rw<6?'tl-dot-red':rw<12?'tl-dot-yellow':'tl-dot-green';
+  el.innerHTML=`
+    <div class="tl-item"><div class="tl-dot ${dot(rw1)}"></div><div class="tl-body"><h4>① 전체 잔액 기준: ${MP(fd1)}</h4><p>잔액 ${FMT(L.endBalance)} → <strong>${rw1.toFixed(1)}개월</strong> 런웨이</p></div></div>
+    <div class="tl-item"><div class="tl-dot ${dot(rw2)}"></div><div class="tl-body"><h4>② 신보 대출(${FMT(gLoan)}) 제외: ${MP(fd2)}</h4><p>자체 자금+마이너스 통장 ${FMT(bal2)} → <strong>${rw2.toFixed(1)}개월</strong>${rw2<6?' ⚠️':''}</p></div></div>
+    <div class="tl-item"><div class="tl-dot ${dot(rw3)}"></div><div class="tl-body"><h4>③ 전체 대출(${FMT(totalLoan)}) 제외: ${MP(fd3)}</h4><p>순수 자체 자금 ${FMT(bal3)} → <strong>${rw3.toFixed(1)}개월</strong>${rw3<6?' ⚠️ 자체 자금 조기 소진':''}</p></div></div>
+    <div class="tl-item"><div class="tl-dot tl-dot-muted"></div><div class="tl-body"><h4>IR/투자·대출 준비 권장: ${MP(prep)} ~</h4><p>① 기준 소진 6개월 전 착수 권장</p></div></div>`;
+}
+
+function renderGrantsBase(elId){
+  const el=document.getElementById(elId); if(!el) return;
+  if(!D.govGrants?.length){el.innerHTML='<p style="color:var(--muted);font-size:13px">등록된 정부지원금 없음<br><span style="font-size:11px">/finance.dashboard 실행 시 입력 가능</span></p>';return;}
+  el.innerHTML=D.govGrants.map(g=>{
+    const up=Math.min(100,Math.round(g.used/g.totalAmount*100)),rp=Math.min(100-up,Math.round(g.received/g.totalAmount*100));
+    return `<div class="grant-item"><div class="grant-header"><span>${g.name}</span><span class="grant-pct">${up}% 집행</span></div><div class="grant-track"><div class="grant-used" style="width:${up}%"></div><div class="grant-rcv" style="width:${rp}%"></div></div><div class="grant-foot"><span><span class="dot" style="background:var(--accent)"></span>집행 ${FMT(g.used)}</span><span><span class="dot" style="background:rgba(88,166,255,0.5)"></span>수령 ${FMT(g.received)}</span><span><span class="dot" style="background:var(--border)"></span>총 ${FMT(g.totalAmount)}</span>${g.endPeriod?`<span>${MP(g.startPeriod||'')} ~ ${MP(g.endPeriod)}</span>`:''}</div></div>`;
+  }).join('');
+}
+
+function renderScenario(){
+  const L=FM[FM.length-1],br=avgBR();
+  document.getElementById('sc-range').max=Math.min(L.endBalance*0.8,1000000000);
+  calcScenario(0);
+}
+function scFromRange(){ const v=parseInt(document.getElementById('sc-range').value); document.getElementById('sc-num').value=v; document.getElementById('sc-range-label').textContent='₩'+v.toLocaleString(); calcScenario(v); }
+function scFromNum(){ const v=parseInt(document.getElementById('sc-num').value||0); document.getElementById('sc-range').value=Math.min(v,parseInt(document.getElementById('sc-range').max)); document.getElementById('sc-range-label').textContent='₩'+v.toLocaleString(); calcScenario(v); }
+function calcScenario(extra){
+  const L=FM[FM.length-1],br=avgBR(); if(br<=0) return;
+  const rwB=L.endBalance/br,rwA=(L.endBalance-extra)/br;
+  const fdB=addM(L.period,Math.floor(rwB)),fdA=addM(L.period,Math.floor(Math.max(0,rwA)));
+  const shift=diffM(fdA,fdB);
+  document.getElementById('sr-amt').textContent='₩'+extra.toLocaleString();
+  document.getElementById('sr-before').textContent=rwB.toFixed(1)+'개월 ('+MP(fdB)+' 소진)';
+  const ael=document.getElementById('sr-after');
+  ael.textContent=rwA>=0?rwA.toFixed(1)+'개월 ('+MP(fdA)+' 소진)':'잔액 초과';
+  ael.className=extra>0?'c-red':'';
+  document.getElementById('sr-delta').textContent=extra>0?`▼ ${(rwB-rwA).toFixed(1)}개월`:'—';
+  document.getElementById('sr-delta').className=extra>0?'c-red':'';
+  document.getElementById('sr-shift').textContent=shift<0?`${Math.abs(shift)}개월 앞당겨짐`:'—';
+  document.getElementById('sr-shift').className=shift<0?'c-red':'';
+}
+
+function downloadCSV(){
+  const hdr=['기간','총매출','총비용','번레이트','말일잔액','런웨이(개월)','인건비','소프트웨어구독','임차료','기타'];
+  const rows=D.months.map(m=>[m.period,m.totalRevenue,m.totalExpense,m.burnRate,m.endBalance,m.runway,m.categories?.['인건비']||0,m.categories?.['소프트웨어·구독']||0,m.categories?.['임차료']||0,m.categories?.['기타']||0].join(','));
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+[hdr.join(','),...rows].join('\n')],{type:'text/csv;charset=utf-8'}));
+  a.download='nxn-finance-'+D.lastUpdated+'.csv'; a.click();
+}
+function downloadJSON(){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,2)],{type:'application/json'}));
+  a.download='nxn-finance-'+D.lastUpdated+'.json'; a.click();
+}
+</script>
+</body>
+</html>

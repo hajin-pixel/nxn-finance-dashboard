@@ -1,0 +1,208 @@
+{
+  "lastUpdated": "2026-05-19",
+  "config": {
+    "companyName": "NXN Labs",
+    "loanGuaranteeName": "신용보증대출",
+    "loanGuaranteeTotal": 3000000000,
+    "loanGuaranteeDrawn": 3000000000,
+    "loanMinusBankName": "마이너스 통장",
+    "loanMinusBankLimit": 1800000000,
+    "loanMinusBankDrawn": 0
+  },
+  "months": [
+    {
+      "period": "2026-01",
+      "endBalance": 5500000000,
+      "totalRevenue": 260000000,
+      "serviceRevenue": 75000000,
+      "totalExpense": 950000000,
+      "burnRate": 950000000,
+      "categories": {
+        "인건비": 400000000,
+        "소프트웨어·구독": 125000000,
+        "여비·교통": 110000000,
+        "식대·복리후생": 55000000,
+        "외주·수수료": 42000000,
+        "임차료": 12000000,
+        "기타": 200000000
+      },
+      "topCosts": [
+        { "name": "직원급여", "amount": 340000000, "category": "인건비" },
+        { "name": "행사 참가비 A", "amount": 190000000, "category": "기타" },
+        { "name": "클라우드 인프라 A", "amount": 78000000, "category": "소프트웨어·구독" },
+        { "name": "GPU 비용", "amount": 54000000, "category": "기타" },
+        { "name": "AI 서비스 구독 A", "amount": 30000000, "category": "소프트웨어·구독" },
+        { "name": "숙박비 (행사 A)", "amount": 27000000, "category": "여비·교통" },
+        { "name": "항공권 (행사 A)", "amount": 23000000, "category": "여비·교통" },
+        { "name": "원천세 (1월분)", "amount": 19000000, "category": "기타" },
+        { "name": "항공권 (행사 B)", "amount": 19000000, "category": "여비·교통" },
+        { "name": "비즈니스 자문료 A", "amount": 17000000, "category": "외주·수수료" },
+        { "name": "행사 부스 비용", "amount": 13000000, "category": "기타" },
+        { "name": "비즈니스 자문료 B", "amount": 13000000, "category": "외주·수수료" },
+        { "name": "행사 물품", "amount": 11000000, "category": "기타" },
+        { "name": "복리후생비 A", "amount": 9000000, "category": "식대·복리후생" },
+        { "name": "교육비 지원", "amount": 7000000, "category": "식대·복리후생" }
+      ]
+    },
+    {
+      "period": "2026-02",
+      "endBalance": 6800000000,
+      "totalRevenue": 470000000,
+      "serviceRevenue": 55000000,
+      "totalExpense": 710000000,
+      "burnRate": 710000000,
+      "categories": {
+        "인건비": 350000000,
+        "소프트웨어·구독": 24000000,
+        "여비·교통": 42000000,
+        "식대·복리후생": 48000000,
+        "외주·수수료": 60000000,
+        "임차료": 12000000,
+        "기타": 175000000
+      },
+      "topCosts": [
+        { "name": "직원급여", "amount": 280000000, "category": "인건비" },
+        { "name": "정부사업 집행금 A", "amount": 66000000, "category": "기타" },
+        { "name": "4대보험료", "amount": 57000000, "category": "인건비" },
+        { "name": "숙박비 (행사 B)", "amount": 25000000, "category": "여비·교통" },
+        { "name": "원천세 (2월분)", "amount": 23000000, "category": "기타" },
+        { "name": "비즈니스 자문료 A", "amount": 17000000, "category": "외주·수수료" },
+        { "name": "마케팅 비용 A", "amount": 15000000, "category": "기타" },
+        { "name": "비즈니스 자문료 B", "amount": 13000000, "category": "외주·수수료" },
+        { "name": "채용 수수료", "amount": 13000000, "category": "외주·수수료" },
+        { "name": "사무용품", "amount": 12000000, "category": "기타" },
+        { "name": "복리후생비 B", "amount": 11000000, "category": "식대·복리후생" },
+        { "name": "비품 구매", "amount": 8000000, "category": "기타" },
+        { "name": "식대 A", "amount": 7000000, "category": "식대·복리후생" },
+        { "name": "해외 법인 비용", "amount": 5000000, "category": "외주·수수료" },
+        { "name": "복리후생비 C", "amount": 5000000, "category": "식대·복리후생" }
+      ]
+    },
+    {
+      "period": "2026-03",
+      "endBalance": 7500000000,
+      "totalRevenue": 380000000,
+      "serviceRevenue": 85000000,
+      "totalExpense": 770000000,
+      "burnRate": 770000000,
+      "categories": {
+        "인건비": 420000000,
+        "소프트웨어·구독": 60000000,
+        "여비·교통": 100000000,
+        "식대·복리후생": 42000000,
+        "외주·수수료": 42000000,
+        "임차료": 12000000,
+        "기타": 90000000
+      },
+      "topCosts": [
+        { "name": "직원급여", "amount": 300000000, "category": "인건비" },
+        { "name": "4대보험료 (3월분)", "amount": 66000000, "category": "인건비" },
+        { "name": "4대보험료 (2월분 추가)", "amount": 54000000, "category": "인건비" },
+        { "name": "GPU 비용", "amount": 35000000, "category": "기타" },
+        { "name": "원천세 (3월분)", "amount": 27000000, "category": "기타" },
+        { "name": "항공권 (행사 C)", "amount": 25000000, "category": "여비·교통" },
+        { "name": "AI 서비스 구독 A", "amount": 24000000, "category": "소프트웨어·구독" },
+        { "name": "숙박비 (행사 C-1)", "amount": 21000000, "category": "여비·교통" },
+        { "name": "숙박비 (행사 C-2)", "amount": 19000000, "category": "여비·교통" },
+        { "name": "비즈니스 자문료 A", "amount": 17000000, "category": "외주·수수료" },
+        { "name": "비즈니스 자문료 B", "amount": 13000000, "category": "외주·수수료" },
+        { "name": "항공권 (행사 C 추가)", "amount": 11000000, "category": "여비·교통" },
+        { "name": "식대 A", "amount": 5000000, "category": "식대·복리후생" },
+        { "name": "지방소득세", "amount": 5000000, "category": "기타" },
+        { "name": "SaaS 구독 B", "amount": 4000000, "category": "소프트웨어·구독" }
+      ]
+    },
+    {
+      "period": "2026-04",
+      "endBalance": 9800000000,
+      "totalRevenue": 570000000,
+      "serviceRevenue": 230000000,
+      "totalExpense": 830000000,
+      "burnRate": 830000000,
+      "categories": {
+        "인건비": 390000000,
+        "소프트웨어·구독": 54000000,
+        "임차료": 0,
+        "여비·교통": 90000000,
+        "식대·복리후생": 42000000,
+        "외주·수수료": 42000000,
+        "기타": 210000000
+      },
+      "topCosts": [
+        { "name": "직원급여", "amount": 300000000, "category": "인건비" },
+        { "name": "4대보험료", "amount": 90000000, "category": "인건비" },
+        { "name": "행사 참가비+숙소 A", "amount": 72000000, "category": "여비·교통" },
+        { "name": "행사 참가비 B", "amount": 48000000, "category": "여비·교통" },
+        { "name": "숙박비 (행사 D)", "amount": 25000000, "category": "여비·교통" },
+        { "name": "AI 서비스 구독 A", "amount": 24000000, "category": "소프트웨어·구독" },
+        { "name": "원천세 (3월분)", "amount": 23000000, "category": "기타" },
+        { "name": "비즈니스 자문료 A", "amount": 17000000, "category": "외주·수수료" },
+        { "name": "숙박비 (행사 D-2)", "amount": 18000000, "category": "여비·교통" },
+        { "name": "항공권 (행사 D)", "amount": 15000000, "category": "여비·교통" },
+        { "name": "비품 구매", "amount": 13000000, "category": "기타" },
+        { "name": "비즈니스 자문료 B", "amount": 13000000, "category": "외주·수수료" },
+        { "name": "항공권 (행사 D-2)", "amount": 11000000, "category": "여비·교통" },
+        { "name": "회계 기장료", "amount": 11000000, "category": "기타" },
+        { "name": "SaaS 구독 B", "amount": 5000000, "category": "소프트웨어·구독" }
+      ]
+    }
+  ],
+  "weeks": [
+    {
+      "period": "2026-W20",
+      "endBalance": 9500000000,
+      "totalRevenue": 15000000,
+      "serviceRevenue": 5000000,
+      "totalExpense": 69000000,
+      "burnRate": 69000000,
+      "categories": {
+        "인건비": 0,
+        "소프트웨어·구독": 7000000,
+        "임차료": 0,
+        "여비·교통": 0,
+        "식대·복리후생": 13000000,
+        "외주·수수료": 25000000,
+        "기타": 25000000
+      },
+      "topCosts": [
+        { "name": "비즈니스 자문료 A", "amount": 17000000, "category": "외주·수수료" },
+        { "name": "대출 이자", "amount": 10000000, "category": "기타" },
+        { "name": "비즈니스 자문료 B", "amount": 8000000, "category": "외주·수수료" },
+        { "name": "식대", "amount": 8000000, "category": "식대·복리후생" },
+        { "name": "소프트웨어 구독", "amount": 7000000, "category": "소프트웨어·구독" },
+        { "name": "원천세·지방세", "amount": 6000000, "category": "기타" },
+        { "name": "복리후생비", "amount": 4000000, "category": "식대·복리후생" }
+      ]
+    }
+  ],
+  "govGrants": [
+    {
+      "name": "정부지원사업 A (3년차)",
+      "totalAmount": 3600000000,
+      "received": 240000000,
+      "used": 240000000,
+      "months": [{ "month": "2026-04", "received": 240000000 }]
+    },
+    {
+      "name": "정부지원사업 B (해외마케팅)",
+      "totalAmount": 450000000,
+      "received": 54000000,
+      "used": 54000000,
+      "months": [{ "month": "2026-04", "received": 54000000 }]
+    },
+    {
+      "name": "정부지원사업 C (창업사업화)",
+      "totalAmount": 600000000,
+      "received": 0,
+      "used": 0,
+      "months": []
+    },
+    {
+      "name": "정부지원사업 D",
+      "totalAmount": 180000000,
+      "received": 0,
+      "used": 0,
+      "months": []
+    }
+  ]
+}

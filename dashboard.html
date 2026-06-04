@@ -166,7 +166,7 @@
 <div class="header">
   <div class="header-left">
     <div class="logo">NXN <span>Labs</span></div>
-    <div class="header-meta">기준일: 2026-05-29 · 데모 데이터</div>
+    <div class="header-meta">기준일: 2026-05-31 · 실제 데이터 (임시)</div>
   </div>
   <button class="btn" id="theme-btn" onclick="toggleTheme()">☀️ 라이트 모드</button>
 </div>
@@ -193,21 +193,21 @@
   <div class="grid g3 mb24">
     <div class="kpi">
       <div class="kpi-label">현금성 자산 (총)</div>
-      <div class="kpi-value">98억</div>
-      <div class="kpi-sub">신보 대출 제외 시 68억</div>
-      <div class="kpi-delta c-muted">전월 대비 변동 없음</div>
+      <div class="kpi-value">18.9억</div>
+      <div class="kpi-sub">신보 대출(8억) 제외 시 10.9억</div>
+      <div class="kpi-delta c-muted">전월 대비 ▼0.1억 (4월 19.1억)</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">런웨이 (전체 기준)</div>
-      <div class="kpi-value c-yellow">11.8개월</div>
-      <div class="kpi-sub">보수적 (신보 제외) 8.2개월</div>
-      <div class="kpi-delta c-yellow">조달 준비 시점: 2026년 11월</div>
+      <div class="kpi-value c-yellow">11.0개월</div>
+      <div class="kpi-sub">신보 제외 실질 자금 기준 6.4개월</div>
+      <div class="kpi-delta c-yellow">IR 착수 권장: 2026년 11월</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">월 번레이트 (3M 평균)</div>
-      <div class="kpi-value">8,300만</div>
-      <div class="kpi-sub">고정 5,200만 · 변동 3,100만</div>
-      <div class="kpi-delta c-red">▲ 12% vs 전월 (7,400만)</div>
+      <div class="kpi-value">1억 7,154만</div>
+      <div class="kpi-sub">고정 ~6,300만 · 변동 ~1억 900만</div>
+      <div class="kpi-delta c-green">▼ 1.7% vs 전월 (1억 7,708만)</div>
     </div>
   </div>
 
@@ -221,20 +221,16 @@
       <div class="card-title">런웨이 시나리오 비교</div>
       <div class="stat-row">
         <span class="stat-label">① 전체 잔액 기준</span>
-        <span><strong class="c-yellow">11.8개월</strong> <span style="font-size:11px;color:var(--muted)">→ 2027.05 소진</span></span>
+        <span><strong class="c-yellow">11.0개월</strong> <span style="font-size:11px;color:var(--muted)">→ 2027.05 소진</span></span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">② 신보 대출(30억) 제외</span>
-        <span><strong class="c-red">8.2개월</strong> <span style="font-size:11px;color:var(--muted)">→ 2027.01 소진</span></span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">③ 전체 대출(48억) 제외</span>
-        <span><strong class="c-red">6.0개월</strong> <span style="font-size:11px;color:var(--muted)">→ 2026.11 소진</span></span>
+        <span class="stat-label">② 신보 대출(8억) 제외</span>
+        <span><strong class="c-red">6.4개월</strong> <span style="font-size:11px;color:var(--muted)">→ 2026.12 소진</span></span>
       </div>
       <div style="margin-top:20px">
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">런웨이 시각화 (① 기준 · 18개월 스케일)</div>
         <div class="runway-bar-track">
-          <div class="runway-bar-fill" style="width:65.5%;background:linear-gradient(90deg,var(--accent),var(--yellow))"></div>
+          <div class="runway-bar-fill" style="width:61.1%;background:linear-gradient(90deg,var(--accent),var(--yellow))"></div>
         </div>
         <div class="runway-labels">
           <span>지금 (2026.05)</span>
@@ -247,7 +243,7 @@
 
   <div class="highlight-box">
     <div class="highlight-box-label">📋 현황 요약</div>
-    <p>현재 현금성 자산 <strong>98억</strong> 기준 런웨이는 <strong>11.8개월</strong>입니다. 단, 신보 대출금(30억)을 제외한 실질 자체 자금 기준으로는 <strong>8.2개월</strong>로 줄어듭니다. 번레이트가 전월 대비 12% 증가한 점을 감안하면 <strong>2026년 11월부터 IR 준비에 착수</strong>하는 것이 안전합니다.</p>
+    <p>현재 현금성 자산 <strong>18.9억</strong> 기준 런웨이는 <strong>11.0개월</strong>입니다. 단, 신보 대출금(8억)을 제외한 실질 자체 자금 기준으로는 <strong>6.4개월</strong>(2026년 12월 소진)로 줄어듭니다. 3M 평균 번레이트 1억 7,154만원 기준이며, <strong>2026년 11월부터 IR 준비에 착수</strong>하는 것이 안전합니다.</p>
   </div>
 </section>
 
@@ -264,18 +260,18 @@
   <div class="grid g3 mb24">
     <div class="kpi">
       <div class="kpi-label">이번 달 총 지출</div>
-      <div class="kpi-value">8,300만</div>
-      <div class="kpi-delta c-red">▲ 12% vs 전월</div>
+      <div class="kpi-value">1억 7,402만</div>
+      <div class="kpi-delta c-green">▼ 1.7% vs 전월 (1억 7,708만)</div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">이번 달 매출</div>
-      <div class="kpi-value">2,850만</div>
-      <div class="kpi-sub">미수금 1,200만 (수금 예정: 06-15)</div>
+      <div class="kpi-label">이번 달 서비스매출</div>
+      <div class="kpi-value">902만</div>
+      <div class="kpi-sub">국고보조금 1억 745만 별도 / AR 550만</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">순 현금 소모</div>
-      <div class="kpi-value c-red">5,450만</div>
-      <div class="kpi-sub">지출 − 매출</div>
+      <div class="kpi-value c-yellow">4,371만</div>
+      <div class="kpi-sub">지출 − 전체 입금 (국고보조금 포함)</div>
     </div>
   </div>
 
@@ -305,48 +301,48 @@
         <tbody>
           <tr>
             <td><strong>인건비</strong></td>
-            <td class="ta-r">4,200만</td>
-            <td class="ta-r c-red">▲ 5%</td>
-            <td class="ta-r">51%</td>
-            <td>급여 · 4대보험</td>
+            <td class="ta-r">6,276만</td>
+            <td class="ta-r c-green">▼ 4%</td>
+            <td class="ta-r">36%</td>
+            <td>직원급여</td>
             <td><span class="badge badge-muted">고정</span></td>
           </tr>
           <tr>
-            <td><strong>소프트웨어·구독</strong></td>
-            <td class="ta-r">2,340만</td>
-            <td class="ta-r c-red">▲ 28%</td>
-            <td class="ta-r">28%</td>
-            <td>AWS, Anthropic API</td>
-            <td><span class="badge badge-yellow">급증</span></td>
+            <td><strong>여비·교통</strong></td>
+            <td class="ta-r">4,382만</td>
+            <td class="ta-r c-red">▲ 85%</td>
+            <td class="ta-r">25%</td>
+            <td>항공·숙박 (Lead Summit, VIVATech 선납)</td>
+            <td><span class="badge badge-yellow">일회성 선납</span></td>
           </tr>
           <tr>
-            <td><strong>여비·교통</strong></td>
-            <td class="ta-r">950만</td>
-            <td class="ta-r c-red">▲ 42%</td>
-            <td class="ta-r">11%</td>
-            <td>항공권 · 숙박</td>
-            <td><span class="badge badge-yellow">일회성 포함</span></td>
+            <td><strong>소프트웨어·구독</strong></td>
+            <td class="ta-r">3,246만</td>
+            <td class="ta-r c-red">▲ 188%</td>
+            <td class="ta-r">19%</td>
+            <td>AWS 후납 1,966만 · FAL 490만</td>
+            <td><span class="badge badge-yellow">AWS 후납 포함</span></td>
           </tr>
           <tr>
             <td><strong>외주·수수료</strong></td>
-            <td class="ta-r">680만</td>
-            <td class="ta-r" style="color:var(--muted)">—</td>
-            <td class="ta-r">8%</td>
-            <td>자문료 A, B</td>
-            <td><span class="badge badge-muted">정기</span></td>
+            <td class="ta-r">2,116만</td>
+            <td class="ta-r c-red">▲ 79%</td>
+            <td class="ta-r">12%</td>
+            <td>창업사업화 자부담금 · 자문료</td>
+            <td><span class="badge badge-muted">정기+일회성</span></td>
           </tr>
           <tr>
-            <td><strong>식대·복리후생</strong></td>
-            <td class="ta-r">130만</td>
-            <td class="ta-r c-green">▼ 8%</td>
-            <td class="ta-r">2%</td>
-            <td>법인카드</td>
+            <td><strong>식대·복리후생·기타</strong></td>
+            <td class="ta-r">1,382만</td>
+            <td class="ta-r c-green">▼ 11%</td>
+            <td class="ta-r">8%</td>
+            <td>법인카드 · 이자비용</td>
             <td><span class="badge badge-muted">정기</span></td>
           </tr>
           <tr style="border-top:1px solid var(--border)">
             <td style="font-weight:700">합계</td>
-            <td class="ta-r" style="font-weight:700">8,300만</td>
-            <td class="ta-r c-red">▲ 12%</td>
+            <td class="ta-r" style="font-weight:700">1억 7,402만</td>
+            <td class="ta-r c-green">▼ 1.7%</td>
             <td class="ta-r">100%</td>
             <td></td><td></td>
           </tr>
@@ -357,7 +353,7 @@
 
   <div class="highlight-box">
     <div class="highlight-box-label">⚠️ 이번 달 번레이트 급증 원인</div>
-    <p>소프트웨어·구독(+28%)은 GPU 비용 증가(+180만), 여비·교통(+42%)은 해외 행사 참가비(+320만)가 주요 원인입니다. 두 항목 모두 일부 일회성 성격이 있어 <strong>6월 번레이트는 7,500만 수준으로 완화</strong>될 것으로 예상됩니다.</p>
+    <p>여비·교통(+85%)은 Lead Summit + VIVATech 항공·숙박 5월 선납 집중 및 COCO 인턴십 출장비. 소프트웨어·구독(+188%)은 2월 AWS 크레딧 지급 지연분 후납(1,966만). 두 항목 모두 <strong>일회성 — 6월에는 출장비 및 AWS 비용 대폭 감소 예정</strong>입니다.</p>
   </div>
 </section>
 
@@ -379,21 +375,14 @@
           <div class="tl-dot tl-dot-yellow"></div>
           <div class="tl-body">
             <h4>① 전체 잔액 기준 — <span class="c-yellow">2027년 5월</span></h4>
-            <p>98억 ÷ 8,300만/월 = 11.8개월 런웨이</p>
+            <p>18.9억 ÷ 1억 7,154만/월 = 11.0개월 런웨이</p>
           </div>
         </div>
         <div class="tl-item">
           <div class="tl-dot tl-dot-red"></div>
           <div class="tl-body">
-            <h4>② 신보 대출(30억) 제외 — <span class="c-red">2027년 1월</span></h4>
-            <p>자체 자금 68억 → 8.2개월 · 대출 상환 시점 고려 필요</p>
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot tl-dot-red"></div>
-          <div class="tl-body">
-            <h4>③ 전체 대출(48억) 제외 — <span class="c-red">2026년 11월</span></h4>
-            <p>순수 자체 자금 50억 → 6.0개월 · 가장 보수적 시나리오</p>
+            <h4>② 신보 대출(8억) 제외 — <span class="c-red">2026년 12월</span></h4>
+            <p>실질 자체 자금 10.9억 → 6.4개월 · 대출 상환 시점 고려 필요</p>
           </div>
         </div>
         <div class="tl-item">
@@ -412,11 +401,11 @@
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
         <div class="stat-row">
           <span class="stat-label">잔여 집행 가능 총액</span>
-          <span class="c-green"><strong>4.19억</strong></span>
+          <span class="c-green"><strong>8.67억</strong></span>
         </div>
         <div class="stat-row">
           <span class="stat-label">집행 시 런웨이 연장 효과</span>
-          <span class="c-green">+0.5개월</span>
+          <span class="c-green">+최대 5.1개월</span>
         </div>
       </div>
     </div>
@@ -437,8 +426,8 @@
       </div>
       <div>
         <div class="stat-row"><span class="stat-label">추가 비용</span><span id="sr-amt">₩0</span></div>
-        <div class="stat-row"><span class="stat-label">현재 런웨이</span><span id="sr-before">11.8개월</span></div>
-        <div class="stat-row"><span class="stat-label">지출 후 런웨이</span><span id="sr-after">11.8개월</span></div>
+        <div class="stat-row"><span class="stat-label">현재 런웨이</span><span id="sr-before">11.0개월</span></div>
+        <div class="stat-row"><span class="stat-label">지출 후 런웨이</span><span id="sr-after">11.0개월</span></div>
         <div class="stat-row"><span class="stat-label">런웨이 감소</span><span id="sr-delta">—</span></div>
         <div class="stat-row"><span class="stat-label">조달 시점 앞당겨짐</span><span id="sr-shift">—</span></div>
       </div>
@@ -447,24 +436,25 @@
 
   <div class="highlight-box">
     <div class="highlight-box-label">📌 권장 액션</div>
-    <p><strong>2026년 11월까지</strong> IR 덱·재무 모델·투자자 리스트 준비를 시작하세요. 현재 번레이트 트렌드(+12%)가 지속될 경우 ② 기준 소진 시점이 <strong>2026년 10월로 앞당겨질 수 있습니다.</strong> 소프트웨어·구독 비용 최적화(월 200~400만 절감 가능)를 병행하면 런웨이를 0.3~0.5개월 연장할 수 있습니다.</p>
+    <p><strong>2026년 11월까지</strong> IR 덱·재무 모델·투자자 리스트 준비를 시작하세요. 신보 대출(8억) 제외 실질 자금 기준 런웨이는 <strong>6.4개월(2026년 12월 소진)</strong>입니다. 정부지원금 잔여 8.67억(DeepTech TIPS 6.87억 + 2026년 신규 사업 1.8억)을 순차 집행하면 최대 5.1개월 추가 확보 가능합니다.</p>
   </div>
 </section>
 
 </div><!-- /main -->
 
 <script>
-// ── DEMO DATA ──
-const BALANCE  = [55, 68, 75, 95, 98];
+// ── REAL DATA (2026년 1~5월 실제) ──
+const BALANCE  = [12.2, 12.2, 11.7, 19.1, 18.9]; // 실제 월말 잔액 (억)
 const LABELS   = ['01월', '02월', '03월', '04월', '05월'];
-const REVENUE  = [26, 47, 38, 57, 29];
-const EXPENSE  = [95, 71, 77, 83, 83];
+const REVENUE  = [17, 11, 17, 58, 9];   // 서비스매출 (백만, 국고보조금 제외)
+const EXPENSE  = [254, 147, 161, 177, 174]; // 총 지출 (백만)
 const PIE_LABELS = ['인건비','소프트웨어·구독','여비·교통','외주·수수료','식대·기타'];
-const PIE_DATA   = [42, 23, 11, 8, 2];
+const PIE_DATA   = [36, 19, 25, 12, 8]; // 2026년 5월 실제 비중
 const GOV_GRANTS = [
-  { name:'TIPS R&D (3년차)', total:3600000000, used:240000000 },
-  { name:'해외마케팅 B',      total:450000000,  used:54000000  },
-  { name:'창업사업화 C',      total:600000000,  used:0         },
+  { name:'DeepTech TIPS (3년차)', total:839102022, used:151625910 },
+  { name:'2026 팁스 창업사업화',   total:100000000, used:0 },
+  { name:'2026 스타일테크',        total:30000000,  used:0 },
+  { name:'2026 데이터바우처',      total:50000000,  used:0 },
 ];
 const FMT = n => {
   const a = Math.abs(n);
@@ -585,7 +575,7 @@ function renderAll(){
 }
 
 // ── SCENARIO ──
-const BAL = 9800000000, BR = 83000000;
+const BAL = 1893580728, BR = 171536878; // 실제 5월말 잔액 / 3M 평균 번레이트
 function scFromRange(){
   const v = parseInt(document.getElementById('sc-range').value);
   document.getElementById('sc-num').value = v;

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-19",
+  "lastUpdated": "2026-06-15",
   "config": {
     "companyName": "NXN Labs",
     "loanGuaranteeName": "신용보증대출",
@@ -148,6 +148,64 @@
     }
   ],
   "weeks": [
+    {
+      "period": "2026-W24",
+      "endBalance": 1818701651,
+      "totalRevenue": 355173,
+      "serviceRevenue": 0,
+      "totalExpense": 31498787,
+      "burnRate": 31498787,
+      "categories": {
+        "인건비": 0,
+        "소프트웨어·구독": 644647,
+        "임차료": 0,
+        "여비·교통": 3416200,
+        "식대·복리후생": 1701270,
+        "외주·수수료": 21971210,
+        "기타": 3765460
+      },
+      "topCosts": [
+        { "name": "창업진흥원 팁스 창업사업화 자부담금", "amount": 14290000, "category": "외주·수수료" },
+        { "name": "오렌지스튜디오 자문료", "amount": 3850000, "category": "외주·수수료" },
+        { "name": "문스트럭컨설팅 자문료", "amount": 3300000, "category": "외주·수수료" },
+        { "name": "에어프레미아 (재원, VIVATech 파리)", "amount": 3073600, "category": "여비·교통" },
+        { "name": "쿠팡 맥북 PC (창업사업화)", "amount": 2765740, "category": "기타" },
+        { "name": "VIVATech 모니터 렌트 해외송금", "amount": 487801, "category": "외주·수수료" },
+        { "name": "VIVATech 굿즈 제작", "amount": 441760, "category": "기타" },
+        { "name": "VIVATech 홍보물 제작", "amount": 396000, "category": "기타" },
+        { "name": "Flex HR 구독", "amount": 224400, "category": "소프트웨어·구독" },
+        { "name": "Figma 구독", "amount": 124581, "category": "소프트웨어·구독" }
+      ]
+    },
+    {
+      "period": "2026-W21",
+      "endBalance": 1806133097,
+      "totalRevenue": 6830052,
+      "serviceRevenue": 0,
+      "totalExpense": 78865630,
+      "burnRate": 78865630,
+      "categories": {
+        "인건비": 62520516,
+        "소프트웨어·구독": 1782722,
+        "임차료": 0,
+        "여비·교통": 11658527,
+        "식대·복리후생": 1371430,
+        "외주·수수료": 112641,
+        "기타": 1419794
+      },
+      "topCosts": [
+        { "name": "급여이체 (전직원)", "amount": 59506162, "category": "인건비" },
+        { "name": "THE LANGHAM NY 숙박", "amount": 9018744, "category": "여비·교통" },
+        { "name": "정승우 급여", "amount": 3014354, "category": "인건비" },
+        { "name": "이니시스 (계정미분류)", "amount": 866292, "category": "기타" },
+        { "name": "CLUB QUARTERS HOTEL", "amount": 699639, "category": "여비·교통" },
+        { "name": "Higgsfield 구독", "amount": 390007, "category": "소프트웨어·구독" },
+        { "name": "Anthropic API (05-21)", "amount": 370436, "category": "소프트웨어·구독" },
+        { "name": "Anthropic API (05-22)", "amount": 322652, "category": "소프트웨어·구독" },
+        { "name": "TST*IL BUCO ALIMENTARI", "amount": 237474, "category": "여비·교통" },
+        { "name": "UBER (해외출장)", "amount": 209515, "category": "여비·교통" }
+      ]
+    },
     {
       "period": "2026-W20",
       "endBalance": 9500000000,

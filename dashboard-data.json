@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-15",
+  "lastUpdated": "2026-06-22",
   "config": {
     "companyName": "NXN Labs",
     "loanGuaranteeName": "신용보증대출",
@@ -148,6 +148,35 @@
     }
   ],
   "weeks": [
+    {
+      "period": "2026-W25",
+      "endBalance": 1787719595,
+      "totalRevenue": 6090884,
+      "serviceRevenue": 5500000,
+      "totalExpense": 30539368,
+      "burnRate": 30539368,
+      "categories": {
+        "인건비": 4004015,
+        "소프트웨어·구독": 2076065,
+        "임차료": 0,
+        "여비·교통": 5351119,
+        "식대·복리후생": 3689221,
+        "외주·수수료": 3058803,
+        "기타": 12360145
+      },
+      "topCosts": [
+        {"name": "FAL.ai GPU (06-19)", "amount": 5434450, "category": "기타"},
+        {"name": "FAL.ai GPU (06-19)", "amount": 4492512, "category": "기타"},
+        {"name": "박정민 퇴직금", "amount": 4004015, "category": "인건비"},
+        {"name": "대출이자 (하나은행)", "amount": 2151145, "category": "기타"},
+        {"name": "BNL LAW 자문료 (해외법인)", "amount": 1940912, "category": "외주·수수료"},
+        {"name": "재원 숙박예약 (TRAVEL RESERVATION)", "amount": 1517101, "category": "여비·교통"},
+        {"name": "ANTHROPIC PBC 대량청구", "amount": 1122300, "category": "소프트웨어·구독"},
+        {"name": "리멤버앤컴퍼니", "amount": 1100000, "category": "외주·수수료"},
+        {"name": "재원 KOREAN AIR (파리출장)", "amount": 753195, "category": "여비·교통"},
+        {"name": "재원 TRANSAVIA (파리출장)", "amount": 645347, "category": "여비·교통"}
+      ]
+    },
     {
       "period": "2026-W24",
       "endBalance": 1818701651,
